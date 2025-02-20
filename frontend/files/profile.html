@@ -119,7 +119,7 @@
         const buttonCapturePhoto = document.querySelector('button[action="capture-photo"]');
 
         const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
         const overlay = document.getElementById('overlay');
         const webcam = document.getElementById('webcam');
 
