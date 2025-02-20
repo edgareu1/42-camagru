@@ -89,6 +89,10 @@ func CreateComment(userID, imageID int, content string) error {
 }
 
 func SendCommentNotification(fromUserID, toUserID int, content string) error {
+	if fromUserID == toUserID {
+		return nil
+	}
+
 	fromUser, err := GetUser(fromUserID)
 	if err != nil {
 		return err
