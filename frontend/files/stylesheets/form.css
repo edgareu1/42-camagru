@@ -1,0 +1,52 @@
+.basic-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background-color: #1F2937;
+    max-width: 400px;
+    padding: 24px;
+    border-radius: 6px;
+    margin: 0 auto;
+
+    p {
+        color: white;
+        font-weight: 300;
+        line-height: 1.2;
+    }
+
+    label {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        color: white;
+    }
+
+    label span {
+        cursor: pointer;
+    }
+
+    input {
+        color: #1F2937;
+        background-color: white;
+        padding: 4px 8px;
+        border-radius: 2px;
+    }
+
+    input[type="submit"] {
+        font-weight: 500;
+        margin-top: 8px;
+        cursor: pointer;
+
+        &:hover {
+            opacity: 0.9;
+        }
+    }
+
+    .form-error {
+        display: none;
+        text-align: center;
+        color: red;
+        font-size: 14px;
+        margin-top: -10px;
+    }
+}

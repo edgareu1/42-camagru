@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camagru App - Verify profile</title>
+    <link rel="stylesheet" href="/stylesheets/index.css">
+    <script type="module" src="/scripts/index.js"></script>
+</head>
+
+<body>
+    <main>
+        <section class="container px-4 mx-auto">
+            <h1>
+                Verify profile
+            </h1>
+
+            <form onsubmit="handleSubmit(event)" class="basic-form">
+                <p>
+                    Enter the verification code sent to your email
+                </p>
+
+                <label for="verification-code">
+                    <span>
+                        Verification code
+                    </span>
+                    <input type="text" id="verification-code" name="verification-code" placeholder="Verification code" autocomplete="verification-code" required>
+                </label>
+
+                <input type="submit" value="Verify profile">
+
+                <div class="form-error">
+                    <!-- Error message will be displayed here -->
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get("userId");
+
+        const handleSubmit = () => handleFormSubmit(event, `/users/${userId}/verify`, (response) => {
+            window.location.href = "/sign-in";
+        });
+    </script>
+</body>
+</html>

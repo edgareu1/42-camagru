@@ -1,0 +1,14 @@
+.pagination-button {
+    color: white;
+    font-size: 14px;
+    line-height: 1;
+    width: 28px;
+    background-color: #1F2937;
+    padding: 8px;
+    border-radius: 2px;
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: auto;
+    }
+}

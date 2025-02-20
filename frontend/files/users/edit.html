@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camagru App - Edit profile</title>
+    <link rel="stylesheet" href="/stylesheets/index.css">
+    <script type="module" src="/scripts/index.js"></script>
+</head>
+
+<body>
+    <main>
+        <section class="container px-4 mx-auto">
+            <h1>
+                Edit Profile
+            </h1>
+
+            <form onsubmit="handleSubmit(event)" class="basic-form">
+                <p>
+                    Fill the field you want to edit
+                </p>
+
+                <label for="username">
+                    <span>
+                        Username
+                    </span>
+                    <input type="text" id="username" name="username" placeholder="Username" autocomplete="username">
+                </label>
+
+                <label for="email">
+                    <span>
+                        Email
+                    </span>
+                    <input type="email" id="email" name="email" placeholder="Email" autocomplete="email">
+                </label>
+
+                <label class="flex-row!" for="receive-notifications">
+                    <span>
+                        Receive email notifications
+                    </span>
+
+                    <input type="checkbox" id="receive-notifications" name="receive-notifications">
+                </label>
+
+                <label for="password">
+                    <span>
+                        Password
+                    </span>
+                    <input type="password" id="password" name="password" placeholder="Password" autocomplete="current-password">
+                </label>
+
+                <label for="confirm-password">
+                    <span>
+                        Confirm password
+                    </span>
+                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm password" autocomplete="current-password">
+                </label>
+
+                <input type="submit" value="Edit profile">
+
+                <div class="form-error">
+                    <!-- Error message will be displayed here -->
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        const userId = localStorage.getItem("X-User-ID");
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (!userId) {
+                    window.location.href = '/sign-in';
+                }
+
+                apiFetch(`/users/${userId}`)
+                    .then((response) => response.json())
+                    .then((response) => {
+                        const responseData = response.data;
+
+                        document.getElementById('username').placeholder = responseData.username;
+                        document.getElementById('email').placeholder = responseData.email;
+                        document.getElementById('receive-notifications').checked = responseData.receive_notifications;
+                    });
+            }, 0);
+        });
+
+        const handleSubmit = () => handleFormSubmit(event, `/users/${userId}`, 'PATCH', (response) => {
+            window.location.href = '/users/edit';
+        });
+    </script>
+</body>
+</html>

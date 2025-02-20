@@ -1,0 +1,59 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/files:/usr/share/nginx/html
+    networks:
+      - api_network
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - EMAIL_ADDRESS=${EMAIL_ADDRESS}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+    networks:
+      - api_network
+      - database_network
+    depends_on:
+      database:
+        condition: service_healthy
+
+  database:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    networks:
+      - database_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      retries: 10
+      start_period: 5s
+      timeout: 10s
+    volumes:
+      - database_data:/var/lib/postgresql/data
+      - ./database/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+
+networks:
+  api_network:
+    driver: bridge
+  database_network:
+    driver: bridge
+
+volumes:
+  database_data:
+    driver: local

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camagru App</title>
+    <link rel="stylesheet" href="/stylesheets/index.css">
+    <script type="module" src="/scripts/index.js"></script>
+</head>
+
+<body>
+    <main>
+        <section class="container px-4 mx-auto">
+            <h1 id="title"></h1>
+        </section>
+
+        <section class="container px-4 mx-auto">
+            <div class="flex flex-col lg:flex-row gap-6">
+                <div class="relative w-fit">
+                    <img
+                        id="image"
+                        class="w-full h-auto max-w-xl rounded"
+                    />
+
+                    <button
+                        onclick="handleImageDelete()"
+                        data-action="delete"
+                        class="absolute top-3 right-3 fill-gray-800 hover:fill-red-800 w-fit bg-white/50 hover:bg-white/75 p-1 rounded duration-100"
+                        style="display: none;"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="40" height="40" viewBox="0 0 30 30">
+                            <path d="M 14.984375 2.4863281 A 1.0001 1.0001 0 0 0 14 3.5 L 14 4 L 8.5 4 A 1.0001 1.0001 0 0 0 7.4863281 5 L 6 5 A 1.0001 1.0001 0 1 0 6 7 L 24 7 A 1.0001 1.0001 0 1 0 24 5 L 22.513672 5 A 1.0001 1.0001 0 0 0 21.5 4 L 16 4 L 16 3.5 A 1.0001 1.0001 0 0 0 14.984375 2.4863281 z M 6 9 L 7.7929688 24.234375 C 7.9109687 25.241375 8.7633438 26 9.7773438 26 L 20.222656 26 C 21.236656 26 22.088031 25.241375 22.207031 24.234375 L 24 9 L 6 9 z"></path>
+                        </svg>
+                    </button>
+
+                    <button
+                        onclick="handleImageToogleLike()"
+                        data-action="like"
+                        class="absolute top-3 right-3 fill-gray-800 hover:fill-red-800 w-fit bg-white/50 hover:bg-white/75 p-1 rounded duration-100"
+                        style="display: none;"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="40" height="40" viewBox="0 0 122.88 107.41">
+                            <path d="M60.83,17.19C68.84,8.84,74.45,1.62,86.79,0.21c23.17-2.66,44.48,21.06,32.78,44.41 c-3.33,6.65-10.11,14.56-17.61,22.32c-8.23,8.52-17.34,16.87-23.72,23.2l-17.4,17.26L46.46,93.56C29.16,76.9,0.95,55.93,0.02,29.95 C-0.63,11.75,13.73,0.09,30.25,0.3C45.01,0.5,51.22,7.84,60.83,17.19L60.83,17.19L60.83,17.19z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="flex flex-col gap-2 py-2">
+                    <p>
+                        <b>
+                            User:
+                        </b>
+                        <span data-to-fill="username"></span>
+                    </p>
+
+                    <p>
+                        <b>
+                            Created at:
+                        </b>
+                        <span data-to-fill="created_at"></span>
+                    </p>
+
+                    <p>
+                        <b>
+                            Num comments:
+                        </b>
+                        <span data-to-fill="num_comments"></span>
+                    </p>
+
+                    <p>
+                        <b>
+                            Num likes:
+                        </b>
+                        <span data-to-fill="num_likes"></span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container px-4 mx-auto mt-8">
+            <h2 class="text-xl font-medium mb-4">
+                Comments
+            </h2>
+
+            <div
+                id="comments-list"
+                class="flex flex-col gap-4 mt-4"
+                style="display: none;"
+            ></div>
+
+            <form
+                onsubmit="submitComment(event)"
+                id="comment-form"
+                class="mt-4"
+                style="display: none;"
+            >
+                <textarea
+                    id="comment-input"
+                    class="w-full h-24 p-2 border border-gray-400 rounded"
+                    placeholder="Type your comment here..."
+                    required
+                ></textarea>
+
+                <button
+                    type="submit"
+                    class="text-white font-medium hover:opacity-90 bg-gray-800 py-2 px-2 rounded mt-1"
+                >
+                    Leave a Comment
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        const userID = localStorage.getItem("X-User-ID");
+        const urlParams = new URLSearchParams(window.location.search);
+        const imageId = urlParams.get('id');
+
+        let wasLiked = false;
+
+        const reloadImageDetails = async (imageId) => {
+            apiFetch(`/images/${imageId}/details`)
+                .then((response) => response.json())
+                .then((response) => {
+                    const responseData = response.data;
+
+                    wasLiked = responseData.was_liked;
+
+                    const title = document.getElementById('title');
+                    title.innerText = `Image ${responseData.id}`;
+
+                    const image = document.getElementById('image');
+                    image.src = `api/images/${responseData.id}`;
+
+                    const username = document.querySelector('[data-to-fill="username"]');
+                    username.innerText = responseData.username;
+
+                    const createdAt = document.querySelector('[data-to-fill="created_at"]');
+                    const date = new Date(responseData.created_at);
+                    const formattedDate = date.toLocaleString('en-US');
+                    createdAt.innerText = formattedDate;
+
+                    const numComments = document.querySelector('[data-to-fill="num_comments"]');
+                    numComments.innerText = responseData.num_comments;
+
+                    const numLikes = document.querySelector('[data-to-fill="num_likes"]');
+                    numLikes.innerText = responseData.num_likes;
+
+                    if (userID == responseData.user_id) {
+                        const deleteButton = document.querySelector('button[data-action="delete"]');
+                        deleteButton.style.display = 'block';
+                    } else if (userID) {
+                        const likeButton = document.querySelector('button[data-action="like"]');
+                        likeButton.style.display = 'block';
+
+                        if (wasLiked) {
+                            likeButton.classList.remove('fill-gray-800');
+                            likeButton.classList.add('fill-red-800');
+                        } else {
+                            likeButton.classList.add('fill-gray-800');
+                            likeButton.classList.remove('fill-red-800');
+                        }
+                    }
+
+                    const commentForm = document.getElementById('comment-form');
+                    if (userID) {
+                        commentForm.style.display = 'block';
+                    } else {
+                        commentForm.style.display = 'none';
+                    }
+                })
+                .catch((error) => {
+                    // console.error(`Error loading the image ${imageId}:`, error);
+                    window.location.href = '/';
+                });
+
+            apiFetch(`/images/${imageId}/comments`)
+                .then((response) => response.json())
+                .then((response) => {
+                    const responseData = response.data;
+
+                    const commentsList = document.getElementById('comments-list');
+                    commentsList.innerHTML = '';
+
+                    if (responseData.length === 0) {
+                        commentsList.style.display = 'none';
+                        return;
+                    }
+
+                    response.data.forEach((comment) => {
+                        const commentElement = document.createElement('div');
+                        commentElement.classList.add('bg-white/60', 'p-4', 'rounded');
+
+                        const commentUser = document.createElement('p');
+                        commentUser.classList.add('mb-1');
+                        commentUser.innerHTML = `<b>User:</b> ${comment.username}`;
+                        commentElement.appendChild(commentUser);
+
+                        const commentCreatedAt = document.createElement('p');
+                        commentCreatedAt.classList.add('mb-4');
+                        const date = new Date(comment.created_at);
+                        const formattedDate = date.toLocaleString('en-US');
+                        commentCreatedAt.innerHTML = `<b>Date:</b> ${formattedDate}`;
+                        commentElement.appendChild(commentCreatedAt);
+
+                        const commentContent = document.createElement('p');
+                        commentContent.innerText = comment.content;
+                        commentElement.appendChild(commentContent);
+
+                        commentsList.appendChild(commentElement);
+                    });
+
+                    commentsList.style.display = 'flex';
+                })
+        };
+
+        const handleImageDelete = () => {
+            apiFetch(`/images/${imageId}`, {
+                method: 'DELETE',
+            }).then(() => {
+                window.location.href = '/';
+            }).catch((error) => {
+                // console.error(`Error deleting the image ${imageId}:`, error);
+            });
+        }
+
+        const handleImageToogleLike = () => {
+            apiFetch(`/images/${imageId}/${wasLiked ? 'unlike' : 'like'}`, {
+                method: 'POST',
+            }).then(() => {
+                reloadImageDetails(imageId);
+            }).catch((error) => {
+                // console.error(`Error liking the image ${imageId}:`, error);
+            });
+        }
+
+        const submitComment = (event) => {
+            event.preventDefault();
+
+            apiFetch(`/images/${imageId}/comments`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    content: event.target[0].value,
+                }),
+            }).then(() => {
+                event.target[0].value = "";
+                reloadImageDetails(imageId);
+            }).catch((error) => {
+                // console.error(`Error submitting the comment for the image ${imageId}:`, error);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            reloadImageDetails(imageId);
+        });
+    </script>
+</body>
+</html>

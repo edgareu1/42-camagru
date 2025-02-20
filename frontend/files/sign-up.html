@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camagru App - Sign up</title>
+    <link rel="stylesheet" href="/stylesheets/index.css">
+    <script type="module" src="/scripts/index.js"></script>
+</head>
+
+<body>
+    <main>
+        <section class="container px-4 mx-auto">
+            <h1>
+                Sign up
+            </h1>
+
+            <form onsubmit="handleSubmit(event)" class="basic-form">
+                <label for="username">
+                    <span>
+                        Username
+                    </span>
+                    <input type="text" id="username" name="username" placeholder="Username" autocomplete="username" required>
+                </label>
+
+                <label for="email">
+                    <span>
+                        Email
+                    </span>
+                    <input type="email" id="email" name="email" placeholder="Email" autocomplete="email" required>
+                </label>
+
+                <label for="password">
+                    <span>
+                        Password
+                    </span>
+                    <input type="password" id="password" name="password" placeholder="Password" autocomplete="current-password" required>
+                </label>
+
+                <input type="submit" value="Sign up">
+
+                <div class="form-error">
+                    <!-- Error message will be displayed here -->
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        const handleSubmit = () => handleFormSubmit(event, '/users', () => {
+            window.location.href = '/sign-in';
+        });
+    </script>
+</body>
+</html>

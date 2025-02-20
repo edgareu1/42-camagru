@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camagru App - Sign in</title>
+    <link rel="stylesheet" href="/stylesheets/index.css">
+    <script type="module" src="/scripts/index.js"></script>
+</head>
+
+<body>
+    <main>
+        <section class="container px-4 mx-auto">
+            <h1>
+                Sign in
+            </h1>
+
+            <form onsubmit="handleSubmit(event)" class="basic-form">
+                <label for="username">
+                    <span>
+                        Username
+                    </span>
+                    <input type="text" id="username" name="username" placeholder="Username" autocomplete="username" required>
+                </label>
+
+                <label for="password">
+                    <span>
+                        Password
+                    </span>
+                    <input type="password" id="password" name="password" placeholder="Password" autocomplete="current-password" required>
+                </label>
+
+                <input type="submit" value="Sign in">
+
+                <div class="form-error">
+                    <!-- Error message will be displayed here -->
+                </div>
+
+                <p>
+                    Forgot your password? <a href="/users/forgot-password" class="hover:underline">Click here</a>
+                </p>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        const handleSubmit = () => handleFormSubmit(event, '/users/sign-in', (response) => {
+            const responseData = response.data;
+            localStorage.setItem("X-User-ID", responseData.id);
+            localStorage.setItem("X-Auth-Token", responseData.token);
+
+            window.location.href = '/';
+        });
+    </script>
+</body>
+</html>
