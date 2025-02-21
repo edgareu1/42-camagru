@@ -43,10 +43,10 @@ func InitRoutes(router *mux.Router) {
 	routerWithAuth.HandleFunc("/images/{id}", DeleteImage).Methods("DELETE")
 
 	// Likes
-	router.HandleFunc("/images/{id}/like", LikeImage).Methods("POST")
-	router.HandleFunc("/images/{id}/unlike", UnlikeImage).Methods("POST")
+	routerWithAuth.HandleFunc("/images/{id}/like", LikeImage).Methods("POST")
+	routerWithAuth.HandleFunc("/images/{id}/unlike", UnlikeImage).Methods("POST")
 
 	// Comments
 	router.HandleFunc("/images/{id}/comments", GetComments).Methods("GET")
-	router.HandleFunc("/images/{id}/comments", CreateComment).Methods("POST")
+	routerWithAuth.HandleFunc("/images/{id}/comments", CreateComment).Methods("POST")
 }
