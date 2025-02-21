@@ -23,7 +23,7 @@
                     />
 
                     <button
-                        onclick="handleImageDelete()"
+                        onclick="handleImageDelete(event)"
                         data-action="delete"
                         class="absolute top-3 right-3 fill-gray-800 hover:fill-red-800 w-fit bg-white/50 hover:bg-white/75 p-1 rounded duration-100"
                         style="display: none;"
@@ -34,7 +34,7 @@
                     </button>
 
                     <button
-                        onclick="handleImageToogleLike()"
+                        onclick="handleImageToogleLike(event)"
                         data-action="like"
                         class="absolute top-3 right-3 fill-gray-800 hover:fill-red-800 w-fit bg-white/50 hover:bg-white/75 p-1 rounded duration-100"
                         style="display: none;"
@@ -214,28 +214,41 @@
                 })
         };
 
-        const handleImageDelete = () => {
+        const handleImageDelete = (event) => {
+            const deleteButton = document.querySelector('button[data-action="delete"]');
+            deleteButton.disabled = true;
+
             apiFetch(`/images/${imageId}`, {
                 method: 'DELETE',
             }).then(() => {
                 window.location.href = '/';
             }).catch((error) => {
+                deleteButton.disabled = false;
                 // console.error(`Error deleting the image ${imageId}:`, error);
             });
         }
 
-        const handleImageToogleLike = () => {
+        const handleImageToogleLike = (event) => {
+            const likeButton = document.querySelector('button[data-action="like"]');
+            likeButton.disabled = true;
+
             apiFetch(`/images/${imageId}/${wasLiked ? 'unlike' : 'like'}`, {
                 method: 'POST',
             }).then(() => {
                 reloadImageDetails(imageId);
             }).catch((error) => {
                 // console.error(`Error liking the image ${imageId}:`, error);
+            })
+            .finally(() => {
+                likeButton.disabled = false;
             });
         }
 
         const submitComment = (event) => {
             event.preventDefault();
+
+            const submitButton = document.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
 
             apiFetch(`/images/${imageId}/comments`, {
                 method: 'POST',
@@ -247,6 +260,9 @@
                 reloadImageDetails(imageId);
             }).catch((error) => {
                 // console.error(`Error submitting the comment for the image ${imageId}:`, error);
+            })
+            .finally(() => {
+                submitButton.disabled = false;
             });
         }
 
