@@ -19,3 +19,14 @@ h1 {
     font-weight: 700 !important;
     margin: 0 auto 40px !important;
 }
+
+a, button, input[type="submit"] {
+    &:not(:disabled) {
+        cursor: pointer;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: auto;
+    }
+}

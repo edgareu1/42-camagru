@@ -1,6 +1,9 @@
 window.handleFormSubmit = async (event, path, method, callback) => {
     event.preventDefault();
 
+    const submitButton = event.target.querySelector('input[type="submit"]');
+    submitButton.disabled = true;
+
     if (typeof method === 'function') {
         callback = method;
         method = 'POST';
@@ -30,6 +33,9 @@ window.handleFormSubmit = async (event, path, method, callback) => {
 
             callback(response);
         })
+        .finally(() => {
+            submitButton.disabled = false;
+        });
 }
 
 window.setFormError = (message = "") => {
