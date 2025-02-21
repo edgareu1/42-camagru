@@ -154,4 +154,19 @@ const submitComment = (event) => {
 
 document.addEventListener('DOMContentLoaded', () => {
     reloadImageDetails(imageId);
+
+    const deleteButtons = document.querySelectorAll('[data-action="delete"]');
+    deleteButtons.forEach((button) => {
+        button.addEventListener('click', handleImageDelete);
+    });
+
+    const likeButtons = document.querySelectorAll('[data-action="like"]');
+    likeButtons.forEach((button) => {
+        button.addEventListener('click', handleImageToogleLike);
+    });
+
+    const commentForms = document.querySelectorAll('[data-action="comment"]');
+    commentForms.forEach((form) => {
+        form.addEventListener('submit', submitComment);
+    });
 });

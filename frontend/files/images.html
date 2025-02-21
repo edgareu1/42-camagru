@@ -24,7 +24,6 @@
                     />
 
                     <button
-                        onclick="handleImageDelete(event)"
                         data-action="delete"
                         class="absolute top-3 right-3 fill-gray-800 hover:fill-red-800 w-fit bg-white/50 hover:bg-white/75 p-1 rounded duration-100"
                         style="display: none;"
@@ -35,7 +34,6 @@
                     </button>
 
                     <button
-                        onclick="handleImageToogleLike(event)"
                         data-action="like"
                         class="absolute top-3 right-3 fill-gray-800 hover:fill-red-800 w-fit bg-white/50 hover:bg-white/75 p-1 rounded duration-100"
                         style="display: none;"
@@ -90,8 +88,8 @@
             ></div>
 
             <form
-                onsubmit="submitComment(event)"
                 id="comment-form"
+                data-action="comment"
                 class="mt-4"
                 style="display: none;"
             >

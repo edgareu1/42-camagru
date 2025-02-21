@@ -21,3 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
 const handleSubmit = () => handleFormSubmit(event, `/users/${userId}`, 'PATCH', (response) => {
     window.location.href = '/users/edit';
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('[data-action="form-submit"]');
+    form.addEventListener('submit', handleSubmit);
+});

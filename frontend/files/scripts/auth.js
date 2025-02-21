@@ -34,3 +34,10 @@ window.handleLogout = (event) => {
     removeAuth();
     window.location.href = '/';
 }
+
+window.authLoader = () => {
+    const logoutButtons = document.querySelectorAll('[data-action="logout"]');
+    logoutButtons.forEach((button) => {
+        button.addEventListener('click', window.handleLogout);
+    });
+}

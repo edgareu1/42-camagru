@@ -27,7 +27,7 @@ window.generateNavbar = (isAuth) => `
                 </a>
             </li>
             <li class="${isAuth ? "" : "hidden"}">
-                <a href="/sign-out" class="hover:underline" onclick="handleLogout(event)">
+                <a href="/sign-out" class="hover:underline" data-action="logout">
                     Sign out
                 </a>
             </li>

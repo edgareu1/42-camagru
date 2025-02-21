@@ -4,3 +4,8 @@ const handleSubmit = () => handleFormSubmit(event, '/users/forgot-password', (re
 
     window.location.href = renewPasswordURL;
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('[data-action="form-submit"]');
+    form.addEventListener('submit', handleSubmit);
+});

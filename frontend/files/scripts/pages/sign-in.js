@@ -5,3 +5,8 @@ const handleSubmit = () => handleFormSubmit(event, '/users/sign-in', (response) 
 
     window.location.href = '/';
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('[data-action="form-submit"]');
+    form.addEventListener('submit', handleSubmit);
+});

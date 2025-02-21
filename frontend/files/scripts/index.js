@@ -19,4 +19,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.body.insertAdjacentHTML('afterbegin', navbar);
     document.body.insertAdjacentHTML('beforeend', footer);
+
+    window.authLoader()
 });

@@ -69,12 +69,12 @@ const changeSelectedOverlay = (index) => {
 }
 
 // -- Buttons functions
-isButtonCapturePhotoDisabled = () => {
+const isButtonCapturePhotoDisabled = () => {
     const isValid = canvasHasValues() && selectedOverlay;
     return !isValid;
 }
 
-checkIfButtonIsDisabled = () => {
+const checkIfButtonIsDisabled = () => {
     const isDisabled = isButtonCapturePhotoDisabled();
     buttonCapturePhoto.disabled = isDisabled;
 }
@@ -99,75 +99,75 @@ const reloadImages = async () => {
         });
 }
 
-// -- Event listeners
-// Turn on/off the webcam
-buttonTurnCamera.addEventListener('click', () => {
-    if (isCameraOn()) {
-        stopCamera();
-    } else {
-        startCamera();
-    }
-});
-
-// Upload an image
-buttonFileInput.addEventListener('change', (event) => {
-    const file = event.target.files[0];
-
-    if (file && file.type === 'image/png') {
-        stopCamera();
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const image = new Image();
-            image.onload = () => {
-                drawImage(image);
-            };
-            image.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-});
-
-// Select an overlay
-buttonsSelectOverlay.forEach((button, index) => {
-    button.addEventListener('click', () => {
-        changeSelectedOverlay(index);
-    });
-});
-
-// Capture a photo
-buttonCapturePhoto.addEventListener('click', () => {
-    if (isButtonCapturePhotoDisabled()) {
-        checkIfButtonIsDisabled();
-        return;
-    }
-
-    const imageData = canvas.toDataURL('image/png');
-    const base64Image = imageData.split(',')[1];
-
-    const overlayFilename = `cat-${selectedOverlay.toString().padStart(2, '0')}.png`;
-
-    apiFetch(`/users/${userID}/images`, {
-        method: 'POST',
-        body: JSON.stringify({
-            image: base64Image,
-            overlay: overlayFilename,
-        }),
-    })
-        .then((response) => response.json())
-        .then((response) => {
-            if (response.success) {
-                reloadImages();
-            }
-            // throw new Error('Error capturing photo');
-        }).catch((error) => {
-            // console.error('Error capturing photo: ', error);
-        });
-});
-
-// -- Initial setup
-checkIfButtonIsDisabled();
-
 document.addEventListener('DOMContentLoaded', () => {
     reloadImages();
+
+    // -- Event listeners
+    // Turn on/off the webcam
+    buttonTurnCamera.addEventListener('click', () => {
+        if (isCameraOn()) {
+            stopCamera();
+        } else {
+            startCamera();
+        }
+    });
+
+    // Upload an image
+    buttonFileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+
+        if (file && file.type === 'image/png') {
+            stopCamera();
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const image = new Image();
+                image.onload = () => {
+                    drawImage(image);
+                };
+                image.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Select an overlay
+    buttonsSelectOverlay.forEach((button, index) => {
+        button.addEventListener('click', () => {
+            changeSelectedOverlay(index);
+        });
+    });
+
+    // Capture a photo
+    buttonCapturePhoto.addEventListener('click', () => {
+        if (isButtonCapturePhotoDisabled()) {
+            checkIfButtonIsDisabled();
+            return;
+        }
+
+        const imageData = canvas.toDataURL('image/png');
+        const base64Image = imageData.split(',')[1];
+
+        const overlayFilename = `cat-${selectedOverlay.toString().padStart(2, '0')}.png`;
+
+        apiFetch(`/users/${userID}/images`, {
+            method: 'POST',
+            body: JSON.stringify({
+                image: base64Image,
+                overlay: overlayFilename,
+            }),
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    reloadImages();
+                }
+                // throw new Error('Error capturing photo');
+            }).catch((error) => {
+                // console.error('Error capturing photo: ', error);
+            });
+    });
+
+    // -- Initial setup
+    checkIfButtonIsDisabled();
 });
