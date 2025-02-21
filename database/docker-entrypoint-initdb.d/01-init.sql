@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(100) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    was_email_verified BOOLEAN DEFAULT TRUE,
+    was_email_verified BOOLEAN DEFAULT FALSE,
     receive_notifications BOOLEAN DEFAULT TRUE,
     verification_code VARCHAR(16) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
